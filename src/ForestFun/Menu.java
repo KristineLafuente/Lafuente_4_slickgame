@@ -50,7 +50,7 @@ public class Menu extends BasicGameState {
 
         throws SlickException {
     	
-    	startimage = new Image("res/ForestRun.png");
+    	startimage = new Image("res/Lafuente_4_EnchantedForest.png");
 
         this.game = game;
 

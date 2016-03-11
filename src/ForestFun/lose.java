@@ -1,6 +1,7 @@
 package ForestFun;
 
 
+import static ForestFun.ForestFun.player;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 
@@ -60,7 +61,7 @@ public class lose extends BasicGameState {
 
 
             throws SlickException {
-    	startimage = new Image("res/LossScreen.png");
+    	startimage = new Image("res/Lafuente_4_LoseScreen.png");
 
 
         this.game = game;
@@ -146,12 +147,12 @@ public class lose extends BasicGameState {
 
             case Input.KEY_1:
 
-                //player.health  = 100000;
-               // player.speed = .4f;
+                player.health  = 100000;
+                player.speed = .4f;
                 ForestFun.counter = 0;
-                itemwin.isvisible = true;
-              //  player.x = 96f;
-             //   player.y = 228f;
+                //GemWin.isvisible = true;
+                player.x = 96f;
+                player.y = 228f;
                 //redo potions and reset cordinates of player
                 game.enterState(1, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 

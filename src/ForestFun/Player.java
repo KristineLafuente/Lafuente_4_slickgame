@@ -18,6 +18,7 @@ import org.newdawn.slick.geom.Shape;
  */
 public class Player {
 
+
     public float x = 96f;
 
     public float y = 228f;
@@ -145,7 +146,7 @@ public class Player {
 
         wait.addFrame(runningSS.getSprite(3, 14), 733);
         sprite = wait;
-        playeranime = wait;
+        
 
             // wait.addFrame(runningSS.getSprite(2, 14), 733);
         // wait.addFrame(runningSS.getSprite(5, 14), 333);
@@ -177,13 +178,13 @@ public class Player {
 
     public float getPlayersX() {
 
-        return this.x;
+        return x;
 
     }
 
     public float getPlayersY() {
 
-        return this.y;
+        return y;
 
     }
 

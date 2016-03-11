@@ -57,7 +57,7 @@ public class Enemy {
     boolean isVisible = true;
     public Shape rect;
 
-//    System.out.println("Right limit: " + rightlimit);
+    
     public enum Direction {
         UP, DOWN, LEFT, RIGHT, WAIT
     }
@@ -142,7 +142,7 @@ public class Enemy {
         int yBlock = (int) (ycheck / SIZE);
         if ((xBlock < MapWidth && yBlock < MapHeight) && (xBlock > 0
                 && yBlock > 0)) {
-            // System.out.println("Am I blocked ? " + Blocked.blocked[xBlock][yBlock] );
+          
             return Blocked.blocked[xBlock][yBlock];
         } else {
             return true;
@@ -150,7 +150,7 @@ public class Enemy {
     }
 
     private boolean canigoup() {
-      // fdelta = player.getpdelta();
+      //fdelta = player.getpdelta();
         return (!isBlocked(this.Bx, this.By - fdelta)
                 || !isBlocked(this.Bx + SIZE - 1, this.By - fdelta));
 
@@ -165,18 +165,15 @@ public class Enemy {
 
     private boolean canigoright() {
         fdelta = player.getpdelta();
-        //System.out.println("Can I go right? " + (!isBlocked(this.Bx + SIZE + fdelta, this.By) || !isBlocked(this.Bx + SIZE + fdelta, this.By - 1)));
+      
         return (!isBlocked(this.Bx + SIZE + 6, this.By - 16)
                 || !isBlocked(this.Bx + SIZE + 16, this.By));
-       //return true;       
+      
     }
 
     private boolean canigoleft() {
         fdelta = player.getpdelta();
-//        if (!(!isBlocked(this.Bx - SIZE, this.By) || !isBlocked(this.Bx - fdelta, this.By + SIZE - 16)) || !isBlocked(this.Bx, this.By + SIZE/2) || !isBlocked(this.Bx -16, this.By -64))
-//        {System.out.println("I can't go left. My id is " + this.getID());
-//         }   
-        //{}
+
         return (!isBlocked(this.Bx - SIZE / 2, this.By + SIZE / 2)
                 || !isBlocked(this.Bx - SIZE, this.By)
                 || !isBlocked(this.Bx - fdelta, this.By + SIZE - 16) //|| !isBlocked(this.Bx, this.By + SIZE/2)
@@ -268,10 +265,9 @@ public class Enemy {
                 this.moveleft();
             } else if (this.Bx < player.getPlayersX()) {
                 this.moveright();
-                //System.out.println("I'm moving right. My id is " + this.getID() + " My x is " + this.Bx + " and my Y is " + this.By);
-                //System.out.println("By the way the player's X is " + player.x + " and the player's Y " + player.y);
+              
             } else {
-               //System.out.println("I can't move left or right. My x is " + this.Bx + " and my Y is " + this.By);
+  
             }
             if (this.By > player.getPlayersY()) {
                 this.moveup();
@@ -279,7 +275,7 @@ public class Enemy {
                 this.movedown();
             } else {
                 int r = (int) (Math.random() * (5 - 1)) + 1;
-                //System.out.println("The number is : " + r);
+             
                 if (r == 1) {
                     this.moveup();
                 } else if (r == 2) {

@@ -52,131 +52,102 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import org.newdawn.slick.tiled.TiledMap;
 
-
-
 public class ForestFun extends BasicGameState {
 
-	public static Player player;
-	public item healthpotion, healthpotion1;
-	public item1 speedpotion, speedpotion1;
-	public itemwin antidote;
-        public Orb magic8ball, orb1;
-        public Orb bob;
-        public Enemy monster;
-        
-        public ArrayList<Enemy> enemiez = new ArrayList();
-	public ArrayList<item> stuff = new ArrayList();
-        public ArrayList<item1> stuff1 = new ArrayList();
-	public ArrayList<itemwin> stuffwin = new ArrayList();
-        public ArrayList<Orb> orblist = new ArrayList(); 
-        
-	private boolean[][] hostiles;
+    public static Player player;
+    public static GemWin antidote;
 
-	private static TiledMap grassMap;
-        private static AppGameContainer app;
-        private static Camera camera;
-	
-	public static int counter = 0;
+    public item healthpotion, healthpotion1;
+    public ItemGem speedpotion, speedpotion1;
+
+    public Weapon magic8ball, weapon1;
+    public Weapon bob;
+    public Enemy monster;
+
+    public ArrayList<Enemy> enemiez = new ArrayList();
+    public ArrayList<item> stuff = new ArrayList();
+    public ArrayList<ItemGem> stuff1 = new ArrayList();
+    public ArrayList<GemWin> stuffwin = new ArrayList();
+    public ArrayList<Weapon> weaponlist = new ArrayList();
+
+    private boolean[][] hostiles;
+
+    private static TiledMap grassMap;
+    private static AppGameContainer app;
+    private static Camera camera;
+
+    public static int counter = 0;
 
 	// player stuff
-
 	//private Animation sprite, up, down, left, right, wait;
-
-	/**
-	 
-	 * The collision map indicating which tiles block movement - generated based
-
-	 * on tile properties
-	 */
-
+    /**
+     *
+     * The collision map indicating which tiles block movement - generated based
+     *
+     * on tile properties
+     */
 	// changed to match size of sprites & map
+    private static final int SIZE = 64;
+    private static final int SCREEN_WIDTH = 1000;
+    private static final int SCREEN_HEIGHT = 750;
 
-	private static final int SIZE = 64;
-        private static final int SCREEN_WIDTH = 1000;
-        private static final int SCREEN_HEIGHT = 750;
-        
-      
+    public ForestFun(int xSize, int ySize) {
 
-        public ForestFun(int xSize, int ySize) {
+    }
 
-	}
+    public void init(GameContainer gc, StateBasedGame sbg)
+            throws SlickException {
 
-	public void init(GameContainer gc, StateBasedGame sbg)
+        gc.setTargetFrameRate(60);
 
-	throws SlickException {
-		
-		gc.setTargetFrameRate(60);
+        gc.setShowFPS(false);
 
-		gc.setShowFPS(false);
-
-		grassMap = new TiledMap("res/d4.tmx");
+        grassMap = new TiledMap("res/d4.tmx");
 
 		// Ongoing checks are useful
-
-		//System.out.println("Tile map is this wide: " + grassMap.getWidth());
-
-		camera = new Camera(gc, grassMap);
-                player = new Player();
+        camera = new Camera(gc, grassMap);
+        player = new Player();
 
 		// player stuff --- these things should probably be chunked into methods
-		// and classes
-
+        // and classes
 		// Obstacles etc.
-
 		// build a collision map based on tile properties in the TileD map
-
-		Blocked.blocked = new boolean[grassMap.getWidth()][grassMap.getHeight()];
-
-		// There can be more than 1 layer. You'll check whatever layer has the
-		// obstacles.
-
-		// You could also use this for planning traps, etc.
+        Blocked.blocked = new boolean[grassMap.getWidth()][grassMap.getHeight()];
 
         for (int xAxis = 0; xAxis < grassMap.getWidth(); xAxis++) {
 
             for (int yAxis = 0; yAxis < grassMap.getHeight(); yAxis++) {
 
-                // int tileID = grassMap.getTileId(xAxis, yAxis, 0);
+                int tileID = grassMap.getTileId(xAxis, yAxis, 1);
 
-                // Why was this changed?
+                String value = grassMap.getTileProperty(tileID,
+                        "blocked", "false");
 
-                // It's a Different Layer.
+                if ("true".equals(value)) {
 
-                // You should read the TMX file. It's xml, i.e.,human-readable
+                    Blocked.blocked[xAxis][yAxis] = true;
 
+                }
+            }
+        }
+        // A remarkably similar process for finding hostiles
 
-            int tileID = grassMap.getTileId(xAxis, yAxis, 1);
+        hostiles = new boolean[grassMap.getWidth()][grassMap.getHeight()];
 
-            String value = grassMap.getTileProperty(tileID,
-                    "blocked", "false");
-
-            if ("true".equals(value)) {
-
-	Blocked.blocked[xAxis][yAxis] = true;
-
-	}
-    }
-}
-		// A remarkably similar process for finding hostiles
-
-	hostiles = new boolean[grassMap.getWidth()][grassMap.getHeight()];
-
-
-		
-		for (int xAxis = 0; xAxis < grassMap.getWidth(); xAxis++) {
-			for (int yAxis = 0; yAxis < grassMap.getHeight(); yAxis++) {
-				int xBlock = (int) xAxis;
-				int yBlock = (int) yAxis;
-				if (!Blocked.blocked[xBlock][yBlock]) {
-					if (xBlock % 9 == 0	&& yBlock % 25 == 0) {
-						item1 h = new item1(xAxis * SIZE, yAxis * SIZE);
-						stuff1.add(h);
-						hostiles[xAxis][yAxis] = true;
-					}
-				}
-			}
-		}
-                        for (int xAxis = 0; xAxis < grassMap.getWidth(); xAxis++) {
+        for (int xAxis = 0; xAxis < grassMap.getWidth(); xAxis++) {
+            for (int yAxis = 0; yAxis < grassMap.getHeight(); yAxis++) {
+                int xBlock = (int) xAxis;
+                int yBlock = (int) yAxis;
+                if (!Blocked.blocked[xBlock][yBlock]) {
+                    if (xBlock % 9 == 0 && yBlock % 25 == 0) {
+                        ItemGem h = new ItemGem(xAxis * SIZE, yAxis * SIZE);
+                        stuff1.add(h);
+                        hostiles[xAxis][yAxis] = true;
+                    }
+                }
+            }
+        }
+        for (int xAxis = 0; xAxis < grassMap.getWidth(); xAxis++) {
             for (int yAxis = 0; yAxis < grassMap.getHeight(); yAxis++) {
                 int xBlock = (int) xAxis;
                 int yBlock = (int) yAxis;
@@ -190,79 +161,80 @@ public class ForestFun extends BasicGameState {
             }
         }
 
-		//healthpotion = new item(100, 100);
-		//healthpotion1 = new item(450, 400);
-		stuff.add(healthpotion);
-		stuff.add(healthpotion1);
+        stuff.add(healthpotion);
+        stuff.add(healthpotion1);
 
-                bob = new Orb(1,1);
-                orb1 = new Orb(42, 42);
-               
-		monster = new Enemy((int) player.x + 142, (int) player.y + 142);
-                
-		speedpotion = new item1(100,150);
-		speedpotion1 = new item1(450,100);	
-		stuff1.add(speedpotion);
-		stuff1.add(speedpotion1);
-		
-		antidote = new itemwin(3004,92);
-		stuffwin.add(antidote);
-                
-                    //orb1 = new Orb (42,42);
-                
-	}
+        bob = new Weapon(1, 1);
+        weapon1 = new Weapon(42, 42);
 
+        monster = new Enemy((int) player.x + 142, (int) player.y + 142);
 
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
+        speedpotion = new ItemGem(100, 150);
+        speedpotion1 = new ItemGem(450, 100);
+        stuff1.add(speedpotion);
+        stuff1.add(speedpotion1);
 
-	throws SlickException {
+        antidote = new GemWin(3004, 92);
+        stuffwin.add(antidote);
 
-		camera.centerOn((int) player.x, (int) player.y);
+    }
 
-		camera.drawMap();
+    public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
+            throws SlickException {
 
-		camera.translateGraphics();
+        camera.centerOn((int) player.x, (int) player.y);
 
-                player.sprite.draw(player.x, player.y);
-                
-		g.drawString("Health: " + player.health/1000, camera.cameraX + 10,
-				camera.cameraY + 10);
-		
-		g.drawString("speed: " + (int)(player.speed *10), camera.cameraX + 10,
-				camera.cameraY + 25);
+        camera.drawMap();
 
-		//g.draw(player.rect);
+        camera.translateGraphics();
 
-		g.drawString("time passed: " +counter/1000, camera.cameraX +600,camera.cameraY );
-		// moveenemies();
-                
-                        for (item1 h : stuff1) {
+        player.sprite.draw(player.x, player.y);
+
+        g.drawString("Health: " + player.health / 1000, camera.cameraX + 10,
+                camera.cameraY + 10);
+
+        g.drawString("speed: " + (int) (player.speed * 10), camera.cameraX + 10,
+                camera.cameraY + 25);
+        
+//        g.draw(player.rect);
+
+        g.drawString("time passed: " + counter / 1000, camera.cameraX + 600, camera.cameraY);
+
+        for (ItemGem h : stuff1) {
             if (h.isvisible) {
                 h.currentImage.draw(h.x, h.y);
             }
         }
-                
-            if(orb1.isIsVisible()){
-                    orb1.orbpic.draw(orb1.getX(),orb1.getY());
-            }
-                    for (Enemy e : enemiez) {
+
+        if (weapon1.isIsVisible()) {
+            weapon1.weaponpic.draw(weapon1.getX(), weapon1.getY());
+        }
+        for (Enemy e : enemiez) {
             if (e.isVisible) {
                 e.currentanime.draw(e.Bx, e.By);
             }
         }
-            
+        for (GemWin w : stuffwin) {
+            if (w.isvisible) {
+                w.currentImage.draw(w.x, w.y);
+            }
+
         }
+        antidote.currentImage.draw(player.x, player.y);
+
+    }
+
+    public void update(GameContainer gc, StateBasedGame sbg, int delta)
+            throws SlickException {
         
-
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) 
-
-	throws SlickException {
-               counter += delta;
+        player.rect.setLocation(player.getplayershitboxX(), player.getplayershitboxY());
+        
+        counter += delta;
         Input input = gc.getInput();
         float fdelta = delta * player.speed;
         player.setpdelta(fdelta);
         double rightlimit = (grassMap.getWidth() * SIZE) - (SIZE * 0.75);
-        // System.out.println("Right limit: " + rightlimit);
+
         float projectedright = player.x + fdelta + SIZE;
         boolean cangoright = projectedright < rightlimit;
         // there are two types of fixes. A kludge and a hack. This is a kludge.
@@ -277,8 +249,7 @@ public class ForestFun extends BasicGameState {
                 player.y -= fdelta;
             }
 
-        } else if (input.isKeyDown(Input.KEY_DOWN)) {
-            player.setDirection(2);
+        } else if (input.isKeyDown(Input.KEY_DOWN)) {            player.setDirection(2);
             player.sprite = player.down;
             if (!isBlocked(player.x, player.y + SIZE + fdelta)
                     || !isBlocked(player.x + SIZE - 1, player.y + SIZE + fdelta)) {
@@ -305,19 +276,20 @@ public class ForestFun extends BasicGameState {
                             + SIZE - 1)))) {
                 player.sprite.update(delta);
                 player.x += fdelta;
-            } 
+            }
         } else if (input.isKeyPressed(Input.KEY_SPACE)) {
             //orb1.setLocation(player.x, player.y);
-            orb1.setDirection(player.getDirection());
-            orb1.settimeExists(100);
-            orb1.setX((int) player.x);
-            orb1.setY((int) player.y);
-            orb1.hitbox.setX(orb1.getX());
-            orb1.hitbox.setY(orb1.getY());
-            orb1.setIsVisible(true);
+            weapon1.setDirection(player.getDirection());
+            weapon1.settimeExists(100);
+            weapon1.setX((int) player.x);
+            weapon1.setY((int) player.y);
+            weapon1.hitbox.setX(weapon1.getX());
+            weapon1.hitbox.setY(weapon1.getY());
+            weapon1.setIsVisible(true);
             //magic8ball.setIsVisible(true);
         }
-                        for (item1 h : stuff1) {
+
+        for (ItemGem h : stuff1) {
             if (player.rect.intersects(h.hitbox)) {
                 if (h.isvisible) {
                     player.speed += .1f;
@@ -326,68 +298,88 @@ public class ForestFun extends BasicGameState {
             }
         }
 
-
-               for (Enemy e : enemiez) {
-                   if (orb1.hitbox.intersects(e.rect)){
-                        e.isVisible = false;
-                    }   
-               }
-        if (orb1.isIsVisible()) {
-            if (orb1.gettimeExists() > 0) {
-                if (orb1.getDirection() == 0) {
-                    orb1.setX((int) player.x);
-                    orb1.setY(orb1.getY() - 5);
-                } else if (orb1.getDirection() == 2) {
-                    orb1.setX((int) player.x);
-                    orb1.setY(orb1.getY() + 5);
-                } else if (orb1.getDirection() == 3) {
-                    orb1.setX(orb1.getX() - 5);
-                    orb1.setY(orb1.getY());
-                } else if (orb1.getDirection() == 1) {
-                    orb1.setX(orb1.getX() + 5);
-                    orb1.setY(orb1.getY());
+        for (Enemy e : enemiez) {
+            if (weapon1.hitbox.intersects(e.rect)) {
+                e.isVisible = false;
+            }
+            
+            if(player.rect.intersects(e.rect)) {
+               
+                if(e.isVisible) {
+                    player.health -= 500;
                 }
-                orb1.hitbox.setX(orb1.getX());
-                orb1.hitbox.setY(orb1.getY());
-                orb1.countdown();
-            } else {
-                orb1.setIsVisible(false);
+                
+            }
+            
+        }
+        for (GemWin w : stuffwin) {
+
+            if (player.rect.intersects(w.hitbox)) {
+                if (w.isvisible) {
+                    w.isvisible = false;
+                    makevisible();
+                    sbg.enterState(3, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                }
+
             }
         }
-                player.health -= counter/1000;
-		if(player.health <= 0){
-			makevisible();
-                        	
+        if (weapon1.isIsVisible()) {
+            if (weapon1.gettimeExists() > 0) {
+                if (weapon1.getDirection() == 0) {
+                    weapon1.setX((int) player.x);
+                    weapon1.setY(weapon1.getY() - 5);
+                } else if (weapon1.getDirection() == 2) {
+                    weapon1.setX((int) player.x);
+                    weapon1.setY(weapon1.getY() + 5);
+                } else if (weapon1.getDirection() == 3) {
+                    weapon1.setX(weapon1.getX() - 5);
+                    weapon1.setY(weapon1.getY());
+                } else if (weapon1.getDirection() == 1) {
+                    weapon1.setX(weapon1.getX() + 5);
+                    weapon1.setY(weapon1.getY());
+                }
+                weapon1.hitbox.setX(weapon1.getX());
+                weapon1.hitbox.setY(weapon1.getY());
+                weapon1.countdown();
+            } else {
+                weapon1.setIsVisible(false);
+            }
         }
-               for (Enemy e : enemiez) {
+//        player.health -= 10;
+        if (player.health <= 0) {
+            makevisible();
+
+        }
+        for (Enemy e : enemiez) {
             if (e.isVisible) {
                 e.move();
             }
         }
     }
-                
-	public int getID() {
 
-		return 1;
+    public int getID() {
+
+        return 1;
+    }
+
+    public void makevisible() {
+        for (ItemGem h : stuff1) {
+            h.isvisible = true;
+        
         }
 
-    public void makevisible(){
-        stuff1.stream().forEach((h) -> {
-                h.isvisible = true;
-            });
-		
-        stuff.stream().forEach((i) -> {
-                i.isvisible = true;
-            });
-        }
-	
+//        for (item i : stuff) {
+//            i.isvisible = true;
+//        }
+    }
+
     private boolean isBlocked(float tx, float ty) {
 
-            int xBlock = (int) tx / SIZE;
-            int yBlock = (int) ty / SIZE;
+        int xBlock = (int) tx / SIZE;
+        int yBlock = (int) ty / SIZE;
 
-            return Blocked.blocked[xBlock][yBlock];
+        return Blocked.blocked[xBlock][yBlock];
 
-	}
+    }
 
 }

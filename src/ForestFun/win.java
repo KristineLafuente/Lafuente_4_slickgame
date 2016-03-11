@@ -6,6 +6,7 @@
 package ForestFun;
 
 
+import static ForestFun.ForestFun.player;
 import org.newdawn.slick.Color;
 
 
@@ -91,7 +92,6 @@ public class win extends BasicGameState {
 
         g.setColor(Color.white);
 
-
         g.drawString("You found the antidote in time!", 380, 200);
         g.drawString("press 1 to play again", 400, 320);
 
@@ -146,16 +146,14 @@ public class win extends BasicGameState {
 
             case Input.KEY_1:
 
-               // Player.health  = 100000;
-              //  Player.speed = .4f;
+                player.health  = 100000;
+                player.speed = .4f;
                 ForestFun.counter = 0;
-            //    Player.x = 96f;
-            //    Player.y = 228f;
+                player.x = 96f;
+                player.y = 228f;
+
+                //GemWin.isvisible = true;
                 
-                
-                //item.isvisible = true;
-                //item1.isvisible = true;
-                itemwin.isvisible = true;
                 game.enterState(1, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 
 

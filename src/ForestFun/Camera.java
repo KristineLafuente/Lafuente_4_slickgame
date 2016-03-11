@@ -102,9 +102,9 @@ GameCanvas
 
      
 
-      this.mapHeight = this.numTilesX * this.tileWidth;
+      this.mapWidth = this.numTilesX * this.tileWidth;
 
-      this.mapWidth = this.numTilesY * this.tileHeight;
+      this.mapHeight = this.numTilesY * this.tileHeight;
 
      
 
